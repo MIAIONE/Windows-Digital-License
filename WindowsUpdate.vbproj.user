@@ -12,6 +12,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
-    <StartArguments>-s</StartArguments>
+    <StartArguments>-%3f</StartArguments>
   </PropertyGroup>
 </Project>

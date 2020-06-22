@@ -27,6 +27,25 @@ Public Class Main
                 End
             End If
             Select Case Command.ToLower
+                Case "-u"
+                    Try
+                        Dim XMPATH_ = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) & "\Microsoft\Windows\ClipSVC\GenuineTicket"
+                        Dim Basepath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
+                        AddSecurityControll2Folder(Basepath + "\Microsoft")
+
+                        AddSecurityControll2Folder(Basepath + "\Microsoft\Windows")
+                        AddSecurityControll2Folder(Basepath + "\Microsoft\Windows\ClipSVC\")
+
+                        If Directory.Exists(XMPATH_) = False Then
+                            Directory.CreateDirectory(XMPATH_)
+                        End If
+                        AddSecurityControll2Folder(XMPATH_)
+                        File.Move("GenuineTicket.xml", XMPATH_ + "\GenuineTicket.xml")
+                        Console.WriteLine("恢复激活状态成功！重启生效！")
+                    Catch
+                        Console.WriteLine("恢复激活状态失败！")
+                    End Try
+                    End
                 Case "-r"
                     If Environment.OSVersion.Version.Major <> 10 Then
                         Console.WriteLine("当前系统为非Windows10系统，数字许可证可能会安装失败！")
@@ -56,7 +75,7 @@ Public Class Main
                     Active()
                     End
                 Case "-?"
-                    MsgBox("-? 显示帮助" + vbCrLf + "-s 静默激活（需要联网）" + vbCrLf + "-e 生成证书到当前目录（需要联网）" + vbCrLf + "-r 静默激活（需要联网）并自动重启" + vbCrLf + "每个选项只能单独使用" + vbCrLf + vbCrLf + vbCrLf + "By BiliBili UP MIAIONE" + vbCrLf + "本软件使用微软官方工具生成数字证书，不会修改任何系统设置，也不会设置KMS38，登录微软账户还可以绑定你的账户，以便于在重大硬件更改时保持激活状态。" + vbCrLf + "MIAIONE 版权所有 本软件开源，请遵守GPLv3开源协议，开源地址：https://github.com/MIAIONE/Windows-Digital-License", vbInformation, "INFO")
+                    MsgBox("-? 显示帮助" + vbCrLf + "-s 静默激活（需要联网）" + vbCrLf + "-e 生成证书到当前目录（需要联网）用于在本系统已经激活的前提下，需要重装时保存数字证书。文件名：GenuineTicket.xml" + vbCrLf + "-u 恢复激活状态（无需联网） 需要在本目录提前放置GenuineTicket.xml（必须为本机之前在KMS38或其他激活方式下保存，全新系统保存该文件无效）" + vbCrLf + "-r 静默激活（需要联网）并自动重启" + vbCrLf + "每个选项只能单独使用" + vbCrLf + vbCrLf + vbCrLf + "By BiliBili UP MIAIONE" + vbCrLf + "温馨提示：（本软件需要在本机已经使用KMS38或其他方式激活后的有效期内使用，以便生成永久激活数字证书，全新未激活的系统不支持永久激活）本软件使用微软官方工具生成数字证书，不会修改任何系统设置，也不会设置KMS38，登录微软账户还可以绑定你的账户，以便于在重大硬件更改时保持激活状态。" + vbCrLf + "MIAIONE 版权所有 本软件开源，请遵守GPLv3开源协议，开源地址：https://github.com/MIAIONE/Windows-Digital-License", vbInformation, "INFO")
                     End
                 Case Else
                     Console.WriteLine("参数无效，请注意只能使用 -？而不是 /?")
@@ -134,7 +153,7 @@ Public Module Method
         fsObj.Write(res, 0, res.Length)
         fsObj.Close()
     End Sub
-    Private Sub AddSecurityControll2Folder(ByVal dirPath As String)
+    Public Sub AddSecurityControll2Folder(ByVal dirPath As String)
         Dim dir As DirectoryInfo = New DirectoryInfo(dirPath)
         Dim dirSecurity As DirectorySecurity = dir.GetAccessControl(AccessControlSections.All)
         Dim [inherits] As InheritanceFlags = InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit
@@ -150,7 +169,7 @@ Public Module Method
         dir.SetAccessControl(dirSecurity)
     End Sub
 
-    Private Sub AddSecurityControll2File(ByVal filePath As String)
+    Public Sub AddSecurityControll2File(ByVal filePath As String)
         Dim fileInfo As FileInfo = New FileInfo(filePath)
         Dim fileSecurity As FileSecurity = fileInfo.GetAccessControl()
         fileSecurity.AddAccessRule(New FileSystemAccessRule("Everyone", FileSystemRights.FullControl, AccessControlType.Allow))
