@@ -1,0 +1,5 @@
+D:\WindowsUpdate\obj\Release\WindowsUpdate.Main.resources
+D:\WindowsUpdate\obj\Release\WindowsUpdate.Resources.resources
+D:\WindowsUpdate\obj\Release\WindowsUpdate.vbproj.GenerateResource.cache
+D:\WindowsUpdate\bin\Release\Windows Digital Update.exe
+D:\WindowsUpdate\obj\Release\Windows Digital Update.exe
